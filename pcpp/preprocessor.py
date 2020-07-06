@@ -392,6 +392,7 @@ class Preprocessor(PreprocessorHooks):
         self.debugout = None
         self.auto_pragma_once_enabled = True
         self.line_directive = '#line'
+        self.passthru_trailing_ws = False
         self.compress = False
 
         # Probe the lexer for selected tokens
@@ -570,7 +571,7 @@ class Preprocessor(PreprocessorHooks):
         a line-by-line format.
         """
         lex = self.lexer.clone()
-        lines = [x.rstrip() for x in input.splitlines()]
+        lines = [x for x in input.splitlines()]
         for i in xrange(len(lines)):
             j = i+1
             while lines[i].endswith('\\') and (j < len(lines)):
@@ -1700,7 +1701,7 @@ class Preprocessor(PreprocessorHooks):
                 else:
                     if tok.type not in self.t_SPACE and len(tok.value) > 0:
                         m = n + 1
-                        while m != first_ws:
+                        while m != first_ws and not self.passthru_trailing_ws:
                             del toks[m]
                             first_ws -= 1
                         first_ws = None

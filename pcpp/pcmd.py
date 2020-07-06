@@ -44,6 +44,7 @@ class CmdPreprocessor(Preprocessor):
         argp.add_argument('--passthru-unknown-exprs', dest = 'passthru_undefined_exprs', action = 'store_true', help = 'Unknown macros in expressions cause preprocessor logic to be passed through instead of executed by treating unknown macros as 0L')
         argp.add_argument('--passthru-comments', dest = 'passthru_comments', action = 'store_true', help = 'Pass through comments unmodified')
         argp.add_argument('--passthru-magic-macros', dest = 'passthru_magic_macros', action = 'store_true', help = 'Pass through double underscore magic macros unmodified')
+        argp.add_argument('--passthru-trailing-ws', dest = 'passthru_trailing_ws', action = 'store_true', help = 'Pass through tailing whitespaces')
         argp.add_argument('--disable-auto-pragma-once', dest = 'auto_pragma_once_disabled', action = 'store_true', default = False, help = 'Disable the heuristics which auto apply #pragma once to #include files wholly wrapped in an obvious include guard macro')
         argp.add_argument('--line-directive', dest = 'line_directive', metavar = 'form', default = '#line', nargs = '?', help = "Form of line directive to use, defaults to #line, specify nothing to disable output of line directives")
         argp.add_argument('--debug', dest = 'debug', action = 'store_true', help = 'Generate a pcpp_debug.log file logging execution')
@@ -66,6 +67,7 @@ class CmdPreprocessor(Preprocessor):
         if self.args.debug:
             self.debugout = open("pcpp_debug.log", "wt")
         self.auto_pragma_once_enabled = not self.args.auto_pragma_once_disabled
+        self.passthru_trailing_ws = self.args.passthru_trailing_ws
         self.line_directive = self.args.line_directive
         if self.line_directive.lower() in ("nothing", "none", ""):
             self.line_directive = None
